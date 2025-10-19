@@ -40,11 +40,6 @@ void DEV_Delay_ms(uint32_t xms)
     sleep_ms(xms);
 }
 
-void DEV_Delay_us(uint32_t xus)
-{
-    sleep_us(xus);
-}
-
 void DEV_GPIO_Init(void)
 {
     DEV_GPIO_Mode(LCD_RST_PIN, 1);
@@ -64,11 +59,6 @@ void DEV_Digital_Write(uint16_t Pin, uint8_t Value)
     gpio_put(Pin, Value);
 }
 
-uint8_t DEV_Digital_Read(uint16_t Pin)
-{
-    return gpio_get(Pin);
-}
-
 /**
  * SPI
  **/
@@ -80,35 +70,6 @@ void DEV_SPI_WriteByte(spi_inst_t *SPI_PORT,uint8_t Value)
 void DEV_SPI_Write_nByte(spi_inst_t *SPI_PORT,uint8_t pData[], uint32_t Len)
 {
     spi_write_blocking(SPI_PORT, pData, Len);
-}
-
-/**
- * I2C
- **/
-
-void DEV_I2C_Write_Byte(i2c_inst_t *I2C_PORT,uint8_t addr, uint8_t reg, uint8_t Value)
-{
-    uint8_t data[2] = {reg, Value};
-    i2c_write_blocking(I2C_PORT, addr, data, 2, false);
-}
-
-void DEV_I2C_Write_nByte(i2c_inst_t *I2C_PORT,uint8_t addr, uint8_t *pData, uint32_t Len)
-{
-    i2c_write_blocking(I2C_PORT, addr, pData, Len, false);
-}
-
-uint8_t DEV_I2C_Read_Byte(i2c_inst_t *I2C_PORT,uint8_t addr, uint8_t reg)
-{
-    uint8_t buf;
-    i2c_write_blocking(I2C_PORT,addr,&reg,1,true);
-    i2c_read_blocking(I2C_PORT,addr,&buf,1,false);
-    return buf;
-}
-
-void DEV_I2C_Read_nByte(i2c_inst_t *I2C_PORT,uint8_t addr,uint8_t reg, uint8_t *pData, uint32_t Len)
-{
-    i2c_write_blocking(I2C_PORT,addr,&reg,1,true);
-    i2c_read_blocking(I2C_PORT,addr,pData,Len,false);
 }
 
 /**
@@ -126,16 +87,6 @@ void DEV_GPIO_Mode(uint16_t Pin, uint16_t Mode)
         gpio_set_dir(Pin, GPIO_OUT);
     }
 }
-
-/**
- * KEY Config
- **/
-void DEV_KEY_Config(uint16_t Pin)
-{
-    gpio_init(Pin);
-    gpio_pull_up(Pin);
-    gpio_set_dir(Pin, GPIO_IN);
-}
 /*
 ** PWM
 */
@@ -143,19 +94,12 @@ void DEV_SET_PWM(uint8_t Value)
 {
     if (Value < 0 || Value > 100)
     {
-        printf("DEV_SET_PWM Error \r\n");
+        //printf("DEV_SET_PWM Error \r\n");
     }
     else
     {
         pwm_set_chan_level(bl_slice_num, PWM_CHAN_B, Value);
     }
-}
-/**
- * IRQ
- **/
-void DEV_IRQ_SET(uint gpio, uint32_t events, gpio_irq_callback_t callback)
-{
-    gpio_set_irq_enabled_with_callback(gpio,events,true,callback);
 }
 
 /******************************************************************************
@@ -175,7 +119,6 @@ uint8_t DEV_Module_Init(void)
         PLL_SYS_KHZ * 1000                              
     );
 
-    stdio_init_all();
     // GPIO Config
     DEV_GPIO_Init();
     // PWM Config
@@ -194,17 +137,5 @@ uint8_t DEV_Module_Init(void)
     c = dma_channel_get_default_config(dma_tx);
     channel_config_set_transfer_data_size(&c, DMA_SIZE_8); 
     channel_config_set_dreq(&c, spi_get_dreq(LCD_SPI_PORT, true));
-
-    printf("DEV_Module_Init OK \r\n");
     return 0;
-}
-
-/******************************************************************************
-function:	Module exits, closes SPI and BCM2835 library
-parameter:
-Info:
-******************************************************************************/
-void DEV_Module_Exit(void)
-{
-    
 }

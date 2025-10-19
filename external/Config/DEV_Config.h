@@ -29,16 +29,12 @@
 #ifndef _DEV_CONFIG_H_
 #define _DEV_CONFIG_H_
 
-#include "stdio.h"
-#include "pico/stdlib.h"
-#include "hardware/adc.h"
 #include "hardware/spi.h"
-#include "hardware/i2c.h"
 #include "hardware/pwm.h"
 #include "hardware/dma.h"
-#include "hardware/pll.h"
 #include "hardware/clocks.h"
 #include "hardware/gpio.h"
+#include "pico/time.h"
 
 #define PLL_SYS_KHZ (150 * 1000)
 
@@ -46,8 +42,6 @@
 /**
  * GPIO config
  **/
-#define DEV_SDA_PIN (6)
-#define DEV_SCL_PIN (7)
 
 #define LCD_DC_PIN (8)
 #define LCD_CS_PIN (9)
@@ -62,31 +56,16 @@ extern uint dma_tx;
 extern dma_channel_config c;
 
 void DEV_Delay_ms(uint32_t xms);
-void DEV_Delay_us(uint32_t xus);
 
 void DEV_Digital_Write(uint16_t Pin, uint8_t Value);
-uint8_t DEV_Digital_Read(uint16_t Pin);
 
 void DEV_GPIO_Mode(uint16_t Pin, uint16_t Mode);
-void DEV_KEY_Config(uint16_t Pin);
-void DEV_Digital_Write(uint16_t Pin, uint8_t Value);
-uint8_t DEV_Digital_Read(uint16_t Pin);
-
-uint16_t DEC_ADC_Read(void);
 
 void DEV_SPI_WriteByte(spi_inst_t *SPI_PORT, uint8_t Value);
 void DEV_SPI_Write_nByte(spi_inst_t *SPI_PORT, uint8_t *pData, uint32_t Len);
 
-void DEV_I2C_Write_Byte(i2c_inst_t *I2C_PORT, uint8_t addr, uint8_t reg, uint8_t Value);
-void DEV_I2C_Write_nByte(i2c_inst_t *I2C_PORT, uint8_t addr, uint8_t *pData, uint32_t Len);
-uint8_t DEV_I2C_Read_Byte(i2c_inst_t *I2C_PORT, uint8_t addr, uint8_t reg);
-void DEV_I2C_Read_nByte(i2c_inst_t *I2C_PORT, uint8_t addr, uint8_t reg, uint8_t *pData, uint32_t Len);
-
-void DEV_IRQ_SET(uint gpio, uint32_t events, gpio_irq_callback_t callback);
-
 void DEV_SET_PWM(uint8_t Value);
 
 uint8_t DEV_Module_Init(void);
-void DEV_Module_Exit(void);
 
 #endif

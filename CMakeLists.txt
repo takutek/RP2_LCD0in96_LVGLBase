@@ -48,7 +48,8 @@ pico_enable_stdio_usb(RP2_LCD0in96_Demo 0)
 target_link_libraries(RP2_LCD0in96_Demo PRIVATE
         lvgl Config lvglport
         hardware_timer
-        hardware_adc)
+        hardware_adc
+        pico_stdlib)
 
 # Add the standard include files to the build
 target_include_directories(RP2_LCD0in96_Demo PRIVATE

@@ -14,9 +14,6 @@
 #include "LCD_0in96.h"
 #include "DEV_Config.h"
 
-#include <stdlib.h> //itoa()
-#include <stdio.h>
-
 LCD_0IN96_ATTRIBUTES LCD_0IN96;
 
 /******************************************************************************
@@ -263,12 +260,7 @@ void LCD_0IN96_Display(uint16_t *Image)
 	for (j = 0; j < LCD_0IN96.HEIGHT; j++)
 	{
 		DEV_SPI_Write_nByte(LCD_SPI_PORT, (uint8_t *)&Image[j * LCD_0IN96.WIDTH], LCD_0IN96.WIDTH * 2);
-
-		// for(j = 0; j < LCD_0IN96.WIDTH*LCD_0IN96.HEIGHT; j++){
-		// LCD_0IN96_SendData_16Bit(Image[j]);
 	}
-	//    DEV_Digital_Write(LCD_CS_PIN, 1);
-	// LCD_0IN96_SendCommand(0x29);
 }
 
 /******************************************************************************
@@ -305,7 +297,6 @@ void LCD_0IN96_DisplayPoint(uint16_t X, uint16_t Y, uint16_t Color)
 void Handler_0IN96_LCD(int signo)
 {
 	// System Exit
-	printf("\r\nHandler:Program stop\r\n");
-	DEV_Module_Exit();
+	//printf("\r\nHandler:Program stop\r\n");
 	exit(0);
 }

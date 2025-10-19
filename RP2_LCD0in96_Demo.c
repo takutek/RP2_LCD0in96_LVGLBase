@@ -1,6 +1,8 @@
+#include <stdio.h>
 #include "pico/time.h"
 #include "LvglPort/LvglPort.h"
 #include "DEV_Config.h"
+#include "hardware/adc.h"
 
 int main()
 {
@@ -44,6 +46,14 @@ int main()
   lv_obj_set_size(bar, lv_pct(80), lv_pct(10));
   lv_obj_align_to(bar, scale, LV_ALIGN_TOP_MID, 0, -10);
   lv_bar_set_range(bar, 20, 35);
+
+  /* バーの色設定
+     - LV_PART_MAIN: 背景（トラック）
+     - LV_PART_INDICATOR: インジケータ（塗りつぶし） */
+  lv_obj_set_style_bg_color(bar, lv_color_hex(0xC0C0C0), LV_PART_MAIN);      // 背景を薄い灰色
+  lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_MAIN);
+  lv_obj_set_style_bg_color(bar, lv_color_hex(0x1E90FF), LV_PART_INDICATOR); // インジケータを青（例）
+  lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_INDICATOR);
 
   // ラベル
   lv_obj_t *label = lv_label_create(lv_screen_active());
