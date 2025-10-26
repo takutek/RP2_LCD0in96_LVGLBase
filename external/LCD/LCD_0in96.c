@@ -70,106 +70,6 @@ static void LCD_0IN96_SendData_16Bit(uint16_t Data)
 	DEV_Digital_Write(LCD_CS_PIN, 1);
 }
 
-/******************************************************************************
-function :	Initialize the lcd register
-parameter:
-******************************************************************************/
-static void LCD_0IN96_InitReg(void)
-{
-	LCD_0IN96_SendCommand(0x11); // Sleep exit
-	DEV_Delay_ms(120);
-	LCD_0IN96_SendCommand(0x21);
-	LCD_0IN96_SendCommand(0x21);
-
-	LCD_0IN96_SendCommand(0xB1);
-	LCD_0IN96_SendData_8Bit(0x05);
-	LCD_0IN96_SendData_8Bit(0x3A);
-	LCD_0IN96_SendData_8Bit(0x3A);
-
-	LCD_0IN96_SendCommand(0xB2);
-	LCD_0IN96_SendData_8Bit(0x05);
-	LCD_0IN96_SendData_8Bit(0x3A);
-	LCD_0IN96_SendData_8Bit(0x3A);
-
-	LCD_0IN96_SendCommand(0xB3);
-	LCD_0IN96_SendData_8Bit(0x05);
-	LCD_0IN96_SendData_8Bit(0x3A);
-	LCD_0IN96_SendData_8Bit(0x3A);
-	LCD_0IN96_SendData_8Bit(0x05);
-	LCD_0IN96_SendData_8Bit(0x3A);
-	LCD_0IN96_SendData_8Bit(0x3A);
-
-	LCD_0IN96_SendCommand(0xB4);
-	LCD_0IN96_SendData_8Bit(0x03);
-
-	LCD_0IN96_SendCommand(0xC0);
-	LCD_0IN96_SendData_8Bit(0x62);
-	LCD_0IN96_SendData_8Bit(0x02);
-	LCD_0IN96_SendData_8Bit(0x04);
-
-	LCD_0IN96_SendCommand(0xC1);
-	LCD_0IN96_SendData_8Bit(0xC0);
-
-	LCD_0IN96_SendCommand(0xC2);
-	LCD_0IN96_SendData_8Bit(0x0D);
-	LCD_0IN96_SendData_8Bit(0x00);
-
-	LCD_0IN96_SendCommand(0xC3);
-	LCD_0IN96_SendData_8Bit(0x8D);
-	LCD_0IN96_SendData_8Bit(0x6A);
-
-	LCD_0IN96_SendCommand(0xC4);
-	LCD_0IN96_SendData_8Bit(0x8D);
-	LCD_0IN96_SendData_8Bit(0xEE);
-
-	LCD_0IN96_SendCommand(0xC5); /*VCOM*/
-	LCD_0IN96_SendData_8Bit(0x0E);
-
-	LCD_0IN96_SendCommand(0xE0);
-	LCD_0IN96_SendData_8Bit(0x10);
-	LCD_0IN96_SendData_8Bit(0x0E);
-	LCD_0IN96_SendData_8Bit(0x02);
-	LCD_0IN96_SendData_8Bit(0x03);
-	LCD_0IN96_SendData_8Bit(0x0E);
-	LCD_0IN96_SendData_8Bit(0x07);
-	LCD_0IN96_SendData_8Bit(0x02);
-	LCD_0IN96_SendData_8Bit(0x07);
-	LCD_0IN96_SendData_8Bit(0x0A);
-	LCD_0IN96_SendData_8Bit(0x12);
-	LCD_0IN96_SendData_8Bit(0x27);
-	LCD_0IN96_SendData_8Bit(0x37);
-	LCD_0IN96_SendData_8Bit(0x00);
-	LCD_0IN96_SendData_8Bit(0x0D);
-	LCD_0IN96_SendData_8Bit(0x0E);
-	LCD_0IN96_SendData_8Bit(0x10);
-
-	LCD_0IN96_SendCommand(0xE1);
-	LCD_0IN96_SendData_8Bit(0x10);
-	LCD_0IN96_SendData_8Bit(0x0E);
-	LCD_0IN96_SendData_8Bit(0x03);
-	LCD_0IN96_SendData_8Bit(0x03);
-	LCD_0IN96_SendData_8Bit(0x0F);
-	LCD_0IN96_SendData_8Bit(0x06);
-	LCD_0IN96_SendData_8Bit(0x02);
-	LCD_0IN96_SendData_8Bit(0x08);
-	LCD_0IN96_SendData_8Bit(0x0A);
-	LCD_0IN96_SendData_8Bit(0x13);
-	LCD_0IN96_SendData_8Bit(0x26);
-	LCD_0IN96_SendData_8Bit(0x36);
-	LCD_0IN96_SendData_8Bit(0x00);
-	LCD_0IN96_SendData_8Bit(0x0D);
-	LCD_0IN96_SendData_8Bit(0x0E);
-	LCD_0IN96_SendData_8Bit(0x10);
-
-	LCD_0IN96_SendCommand(0x3A);
-	LCD_0IN96_SendData_8Bit(0x05);
-
-	LCD_0IN96_SendCommand(0x36);
-	LCD_0IN96_SendData_8Bit(0xA8);
-
-	LCD_0IN96_SendCommand(0x29);
-}
-
 /********************************************************************************
 function :	Initialize the lcd
 parameter:
@@ -178,12 +78,6 @@ void LCD_0IN96_Init(uint8_t Scan_dir)
 {
 	DEV_SET_PWM(90);
 	LCD_0IN96_Reset();
-
-	LCD_0IN96.HEIGHT = LCD_0IN96_HEIGHT;
-	LCD_0IN96.WIDTH = LCD_0IN96_WIDTH;
-
-	// Set the initialization register
-	LCD_0IN96_InitReg();
 }
 
 /********************************************************************************
@@ -294,9 +188,3 @@ void LCD_0IN96_DisplayPoint(uint16_t X, uint16_t Y, uint16_t Color)
 	LCD_0IN96_SendData_16Bit(Color);
 }
 
-void Handler_0IN96_LCD(int signo)
-{
-	// System Exit
-	//printf("\r\nHandler:Program stop\r\n");
-	exit(0);
-}

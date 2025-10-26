@@ -15,10 +15,6 @@
 #define __LCD_0IN96_H
 
 #include "DEV_Config.h"
-#include <stdint.h>
-
-#include <stdlib.h> //itoa()
-#include <stdio.h>
 
 #define LCD_0IN96_HEIGHT 80
 #define LCD_0IN96_WIDTH 160
@@ -68,6 +64,4 @@ void LCD_0IN96_Display(uint16_t *Image);
 void LCD_0IN96_DisplayWindows(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend, uint16_t *Image);
 void LCD_0IN96_DisplayPoint(uint16_t X, uint16_t Y, uint16_t Color);
 void LCD_0IN96_SetWindows(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend);
-
-void Handler_0IN96_LCD(int signo);
 #endif
