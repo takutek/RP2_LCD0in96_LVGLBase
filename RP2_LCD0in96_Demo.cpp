@@ -1,16 +1,19 @@
-#include <stdio.h>
+#include <cstdio>
+#include <iostream>
+#include <memory>
 #include "pico/time.h"
+#include "pico/stdlib.h"
 #include "LvglPort/LvglPort.h"
-#include "DEV_Config.h"
 #include "hardware/adc.h"
+
+#include "Board/BoardInit/BoardInit.h"
 
 int main()
 {
-  if (DEV_Module_Init() != 0)
-  {
-    return -1;
-  }
-  lvgl_disp_init();
+  BoardInit::ModuleInit();
+  stdio_init_all();
+  std::cout << "RP2 LCD0in96 LVGL Temperature Sensor Demo\n";
+  std::unique_ptr<LvglPort> lvglPort = std::make_unique<LvglPort>();
 
   // 温度センサ設定
   adc_init();
@@ -39,13 +42,13 @@ int main()
 
   lv_obj_set_style_length(scale, 5, LV_PART_ITEMS);
   lv_obj_set_style_length(scale, 10, LV_PART_INDICATOR);
-  lv_scale_set_range(scale, 20, 35);
+  lv_scale_set_range(scale, 15, 30);
 
   // バー
   lv_obj_t *bar = lv_bar_create(lv_screen_active());
   lv_obj_set_size(bar, lv_pct(80), lv_pct(10));
   lv_obj_align_to(bar, scale, LV_ALIGN_TOP_MID, 0, -10);
-  lv_bar_set_range(bar, 20, 35);
+  lv_bar_set_range(bar, 15, 30);
 
   /* バーの色設定
      - LV_PART_MAIN: 背景（トラック）

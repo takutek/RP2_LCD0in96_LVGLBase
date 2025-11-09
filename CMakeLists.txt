@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(RP2_LCD0in96_Demo RP2_LCD0in96_Demo.c )
+add_executable(RP2_LCD0in96_Demo RP2_LCD0in96_Demo.cpp )
 
 pico_set_program_name(RP2_LCD0in96_Demo "RP2_LCD0in96_Demo")
 pico_set_program_version(RP2_LCD0in96_Demo "0.1")
@@ -46,18 +46,19 @@ pico_enable_stdio_usb(RP2_LCD0in96_Demo 0)
 
 # Add the standard library to the build
 target_link_libraries(RP2_LCD0in96_Demo PRIVATE
-        lvgl Config lvglport
+        lvgl LvglPort
         hardware_timer
         hardware_adc
-        pico_stdlib)
+        pico_stdlib
+        BoardInit Lcd0in96)
 
 # Add the standard include files to the build
 target_include_directories(RP2_LCD0in96_Demo PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}
 )
 pico_add_extra_outputs(RP2_LCD0in96_Demo)
 
-target_compile_options(RP2_LCD0in96_Demo PRIVATE -Wall -Wextra -Wshadow -Werror)
+target_compile_options(RP2_LCD0in96_Demo PRIVATE -Wall -Wextra -Wshadow -Wpedantic -Werror)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -68,5 +69,4 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(lvgl)
 target_compile_options(lvgl PRIVATE -w)
 
-add_subdirectory(external)
 add_subdirectory(lib)

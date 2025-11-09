@@ -1,0 +1,2 @@
+add_subdirectory(BoardInit)
+add_subdirectory(Lcd0in96)

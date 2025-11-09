@@ -1,0 +1,34 @@
+@startuml Libraries
+package "pico_hal" {
+  class GPIO
+  class Timer
+}
+
+package "board" {
+  class BoardInit
+  class LCDInit
+}
+
+package "display_driver" {
+  class ST7735Driver
+  class LCD0in96Driver
+}
+
+package "lvglport" {
+  class LvglPort
+}
+
+BoardInit --> GPIO
+BoardInit --> Timer
+LCDInit --> GPIO
+
+LvglPort --> ST7735Driver
+LvglPort --> LCD0in96Driver
+
+ST7735Driver --> GPIO
+ST7735Driver --> Timer
+LCD0in96Driver --> GPIO
+LCD0in96Driver --> Timer
+
+LvglPort --> BoardInit
+@enduml

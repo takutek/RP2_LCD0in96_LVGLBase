@@ -1,0 +1,101 @@
+#include <cassert>
+#include "Board/Lcd0in96/Lcd0in96.h"
+#include "Drivers/Timer/Timer.h"
+
+lv_display_t* Lcd0in96::_display = nullptr;
+std::unique_ptr<Gpio> Lcd0in96::_cs = nullptr;
+std::unique_ptr<Gpio> Lcd0in96::_dc = nullptr;
+std::unique_ptr<Spi> Lcd0in96::_spi = nullptr;
+std::unique_ptr<Dma> Lcd0in96::_dma = nullptr;
+
+extern "C" void dma_handler_c() {
+    Lcd0in96::dma_handler();
+}
+
+void Lcd0in96::SendCommand(const uint8_t *cmd, size_t cmd_size, const uint8_t *param, size_t param_size) {
+    _dc -> Write(false);
+    _cs->Write(false);
+    _spi->WriteNByte(cmd, cmd_size);
+    _cs->Write(true);
+
+    if (param != nullptr && param_size != 0) {
+        _dc -> Write(true);
+        _cs->Write(false);
+        _spi->WriteNByte(param, param_size);
+        _cs->Write(true);
+    }
+}
+
+void Lcd0in96::SendColor(const uint8_t *cmd, size_t cmd_size, uint8_t *param, size_t param_size) {
+    _dc -> Write(false);
+    _cs->Write(false);
+    _spi->WriteNByte(cmd, cmd_size);
+
+    _dc -> Write(true);
+    _cs ->Write(false);
+    _dma->SetTransferSize(Dma::TransferSize::SIZE_16bit);
+    _spi->SetTransferSize(16);
+    _spi->isMsbFirst(true);
+    _dma->ConfigureAndStart(reinterpret_cast<uint32_t>(param),
+                           _spi->GetTxRegisterAddr(),
+                           param_size / 2);
+}
+
+void Lcd0in96::InitLcdGpio() {
+    _rst = std::make_unique<Gpio>(LCD_RST_PIN, Gpio::OUTPUT);
+    _rst->Write(true);
+    _cs =  std::make_unique<Gpio>(LCD_CS_PIN, Gpio::OUTPUT);
+    _cs->Write(true);
+    _dc = std::make_unique<Gpio>(LCD_DC_PIN, Gpio::OUTPUT);
+    _dc->Write(true);
+}
+
+void Lcd0in96::InitLcdPwm() {
+    _bl = std::make_unique<Pwm>(LCD_BL_PIN);
+    _bl->SetClockDivider(50);
+    _bl->SetWrap(100);
+    _bl->SetLevel(90);
+    _bl->Enable();
+}
+
+void Lcd0in96::InitLcdSpi() {
+    _spi = std::make_unique<Spi>(LCD_SPI_PORT, LCD_CLK_PIN, LCD_MOSI_PIN, 0, LCD_CS_PIN, LCD_SPI_BAUDRATE);
+}
+
+void Lcd0in96::InitLcdDma() {
+    _dma = std::make_unique<Dma>(Dma::TransferSize::SIZE_8bit);
+    _dma->SetDreq(_spi->GetDreq(true));
+}
+
+void Lcd0in96::LcdReset() {
+    _rst->Write(true);
+    SleepMs(LCD_RST_PERIOD_MS);
+    _rst->Write(false);
+    SleepMs(LCD_RST_PERIOD_MS);
+    _rst->Write(true);
+    SleepMs(LCD_RST_PERIOD_MS);
+}
+
+Lcd0in96::Lcd0in96() {
+    InitLcdGpio();
+    InitLcdPwm();
+    InitLcdSpi();
+    InitLcdDma();
+    LcdReset();
+}
+
+void Lcd0in96::dma_handler() {
+    if (_dma->isDone()) {
+        _dma->AckIrq();
+        _cs->Write(true);
+        _dma->SetTransferSize(Dma::TransferSize::SIZE_8bit);
+        _spi->SetTransferSize(8);
+        _spi->isMsbFirst(true);
+        lv_display_flush_ready(_display);
+    }
+}
+
+void Lcd0in96::SetDmaHandler(lv_display_t *display) {
+    _display = display;
+    _dma->SetIrq(dma_handler_c);
+}

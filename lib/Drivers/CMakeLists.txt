@@ -1,0 +1,5 @@
+add_subdirectory(Gpio)
+add_subdirectory(Timer)
+add_subdirectory(Spi)
+add_subdirectory(Pwm)
+add_subdirectory(Dma)
