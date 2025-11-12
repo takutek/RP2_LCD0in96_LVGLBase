@@ -11,7 +11,6 @@
 int main()
 {
   BoardInit::ModuleInit();
-  stdio_init_all();
   std::cout << "RP2 LCD0in96 LVGL Temperature Sensor Demo\n";
   std::unique_ptr<LvglPort> lvglPort = std::make_unique<LvglPort>();
 
@@ -55,7 +54,7 @@ int main()
      - LV_PART_INDICATOR: インジケータ（塗りつぶし） */
   lv_obj_set_style_bg_color(bar, lv_color_hex(0xC0C0C0), LV_PART_MAIN);      // 背景を薄い灰色
   lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_bg_color(bar, lv_color_hex(0x1E90FF), LV_PART_INDICATOR); // インジケータを青（例）
+  lv_obj_set_style_bg_color(bar, lv_color_hex(0x1E90FF), LV_PART_INDICATOR); // インジケータを青
   lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_INDICATOR);
 
   // ラベル

@@ -1,5 +1,5 @@
 #include "Drivers/Pwm/Pwm.h"
-
+#include "Drivers/Gpio/Gpio.h"
 #include "hardware/clocks.h"
 #include "hardware/pwm.h"
 
@@ -19,8 +19,7 @@ Pwm::~Pwm() {
 }
 
 void Pwm::SetClockDivider(float divider) {
-    _divider = divider;
-    pwm_set_clkdiv(_slice_num, static_cast<float>(_divider));
+    pwm_set_clkdiv(_slice_num, divider);
 }
 
 void Pwm::SetWrap(int wrap) {
@@ -28,12 +27,7 @@ void Pwm::SetWrap(int wrap) {
     pwm_set_wrap(_slice_num, wrap);
 }
 
-void Pwm::SetFrequency(int frequency) {
-    const uint32_t pwm_clock = clock_get_hz(clk_sys) / _divider;
-    const uint16_t wrap_value = static_cast<uint16_t>((pwm_clock / frequency) - 1);
-    pwm_set_wrap(_slice_num, wrap_value);
-}
-
-void Pwm::SetLevel(int level) {
-    pwm_set_chan_level(_slice_num, PWM_CHAN_B, level);
+void Pwm::SetDuty(int duty_percent) {
+    int level = (_wrap + 1) * duty_percent / 100;
+    pwm_set_chan_level(_slice_num, pwm_gpio_to_channel(_pin), level);
 }

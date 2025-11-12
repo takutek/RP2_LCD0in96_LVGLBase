@@ -6,5 +6,5 @@ target_include_directories(${libname} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
 target_link_libraries(${libname} PRIVATE
-    hardware_clocks hardware_pll
+    hardware_clocks hardware_pll pico_stdlib
 )

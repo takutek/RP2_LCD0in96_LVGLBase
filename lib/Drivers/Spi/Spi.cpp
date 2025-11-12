@@ -1,7 +1,7 @@
 #include "Drivers/Spi/Spi.h"
 #include "hardware/spi.h"
 
-Spi::Spi(int port, int clk_pin, int mosi_pin, int miso_pin, int cs_pin, uint32_t baudrate) {
+Spi::Spi(int port, int clk_pin, int mosi_pin, int miso_pin, uint32_t baudrate) {
     _port = port;
     spi_inst_t* spi_port = (port == 0) ? spi0 : spi1;
     spi_init(spi_port, baudrate);
@@ -26,12 +26,6 @@ void Spi::SetTransferSize(int size) {
     _size = size;
     spi_inst_t* spi_port = (_port == 0) ? spi0 : spi1;
     spi_set_format(spi_port, _size, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
-}
-
-void Spi::isMsbFirst(bool MsbFirst) const {
-    spi_inst_t* spi_port = (_port == 0) ? spi0 : spi1;
-    spi_order_t order = MsbFirst ? SPI_MSB_FIRST : SPI_LSB_FIRST;
-    spi_set_format(spi_port, _size, SPI_CPOL_0, SPI_CPHA_0, order);
 }
 
 uint32_t Spi::GetTxRegisterAddr() const {

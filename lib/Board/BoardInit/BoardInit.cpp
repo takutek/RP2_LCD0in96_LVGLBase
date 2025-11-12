@@ -1,5 +1,6 @@
 #include "Board/BoardInit/BoardInit.h"
 #include "hardware/clocks.h"
+#include "pico/stdlib.h"
 
 int BoardInit::ModuleInit() {
     set_sys_clock_khz(PLL_SYS_KHZ, true);
@@ -10,5 +11,6 @@ int BoardInit::ModuleInit() {
         PLL_SYS_KHZ * 1000,
         PLL_SYS_KHZ * 1000
     );
+    stdio_init_all();
     return 0;
 }
