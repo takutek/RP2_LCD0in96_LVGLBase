@@ -47,8 +47,7 @@ pico_enable_stdio_usb(RP2_LCD0in96_Demo 0)
 # Add the standard library to the build
 target_link_libraries(RP2_LCD0in96_Demo PRIVATE
         lvgl LvglPort
-        hardware_timer
-        hardware_adc
+        Timer Adc
         pico_stdlib
         BoardInit Lcd0in96)
 

@@ -1,12 +1,11 @@
 #include <cstdio>
 #include <iostream>
 #include <memory>
-#include "pico/time.h"
 #include "pico/stdlib.h"
 #include "LvglPort/LvglPort.h"
-#include "hardware/adc.h"
-
 #include "Board/BoardInit/BoardInit.h"
+#include "Drivers/Timer/Timer.h"
+#include "Drivers/Adc/Adc.h"
 
 int main()
 {
@@ -15,14 +14,7 @@ int main()
   std::unique_ptr<LvglPort> lvglPort = std::make_unique<LvglPort>();
 
   // 温度センサ設定
-  adc_init();
-  adc_set_temp_sensor_enabled(true);
-  // 温度センサーのチャンネルはQFN-60では4、QFN-80では8
-  adc_select_input(4);
-  // 補正値
-  const float temp_comp_factor = -5.0f;
-  /* 12-bit conversion, assume max value == ADC_VREF == 3.3 V */
-  const float conversionFactor = 3.3f / (1 << 12);
+  std::unique_ptr<Adc> adc = std::make_unique<Adc>(Adc::TEMP_SENSOR_CHANNEL);
 
   static lv_style_t style;
   lv_style_init(&style);
@@ -49,9 +41,7 @@ int main()
   lv_obj_align_to(bar, scale, LV_ALIGN_TOP_MID, 0, -10);
   lv_bar_set_range(bar, 15, 30);
 
-  /* バーの色設定
-     - LV_PART_MAIN: 背景（トラック）
-     - LV_PART_INDICATOR: インジケータ（塗りつぶし） */
+  // バーの色設定
   lv_obj_set_style_bg_color(bar, lv_color_hex(0xC0C0C0), LV_PART_MAIN);      // 背景を薄い灰色
   lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_MAIN);
   lv_obj_set_style_bg_color(bar, lv_color_hex(0x1E90FF), LV_PART_INDICATOR); // インジケータを青
@@ -66,8 +56,7 @@ int main()
   /*Make LVGL periodically execute its tasks*/
   while (true)
   {
-    const float adc = (float)adc_read() * conversionFactor;
-    const float temp = 27.0f - (adc - 0.706f) / 0.001721f + temp_comp_factor;
+    const float temp = Adc::GetTempFromAdcVoltage(adc->ReadVoltage());
     char buf[32];
     snprintf(buf, sizeof(buf), "%.2f°C", temp);
     // スケールの針を温度値に合わせる
@@ -76,7 +65,7 @@ int main()
     // ラベルに温度値を表示
     lv_label_set_text(label, buf);
     lv_timer_handler();
-    sleep_us(1 * 1000000ULL); /*Wait 1s*/
+    SleepMs(1000);
   }
   return 0;
 }

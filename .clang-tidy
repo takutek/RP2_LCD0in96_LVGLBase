@@ -7,7 +7,7 @@ Checks: >
   ,portability-*
   ,readability-*
 WarningsAsErrors: ''
-HeaderFilterRegex: '^(\./|src/|lib/|)'
+HeaderFilterRegex: '(^|.*[\\/])lib[\\/].*|^(\./).*'
 FormatStyle: file
 CheckOptions:
   - key:             modernize-use-nullptr.NullMacros

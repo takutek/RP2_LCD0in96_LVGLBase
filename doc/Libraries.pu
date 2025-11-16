@@ -5,6 +5,7 @@ package "pico_hal" {
   class Spi
   class Pwm
   class Dma
+  class Adc
 }
 
 package "board" {
@@ -16,8 +17,6 @@ package "lvglport" {
   class LvglPort
 }
 
-BoardInit --> Gpio
-BoardInit --> Timer
 Lcd0in96 --> Gpio
 Lcd0in96 --> Timer
 Lcd0in96 --> Spi
