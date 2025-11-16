@@ -15,6 +15,7 @@ public:
     void SetDmaHandler(lv_display_t *display);
     void SendCommand(const uint8_t *cmd, size_t cmd_size, const uint8_t *param, size_t param_size);
     void SendColor(const uint8_t *cmd, size_t cmd_size, uint8_t *param, size_t param_size);
+    void SetBacklightBrightness(uint8_t brightness_percent);
     static void dma_handler();
 
 private:

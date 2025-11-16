@@ -76,6 +76,16 @@ void Lcd0in96::LcdReset() {
     SleepMs(LCD_RST_WAIT_MS);
 }
 
+void Lcd0in96::SetBacklightBrightness(uint8_t brightness_percent) {
+    if (brightness_percent > 100) {
+        brightness_percent = 100;
+    }
+    if (brightness_percent == 0) {
+        brightness_percent = 1;
+    }
+    _bl->SetDuty(brightness_percent);
+}
+
 Lcd0in96::Lcd0in96() {
     InitLcdGpio();
     InitLcdPwm();
