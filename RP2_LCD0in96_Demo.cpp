@@ -1,7 +1,6 @@
 #include <cstdio>
 #include <iostream>
 #include <memory>
-#include "pico/stdlib.h"
 #include "LvglPort/LvglPort.h"
 #include "Board/BoardInit/BoardInit.h"
 #include "Drivers/Timer/Timer.h"
@@ -15,9 +14,6 @@ int main()
 
   // 温度センサ設定
   std::unique_ptr<Adc> adc = std::make_unique<Adc>(Adc::TEMP_SENSOR_CHANNEL);
-
-  static lv_style_t style;
-  lv_style_init(&style);
 
   // ウィジェット設定
   // スケール
@@ -50,7 +46,6 @@ int main()
   // ラベル
   lv_obj_t *label = lv_label_create(lv_screen_active());
   lv_label_set_text(label, "00.00°C");
-  lv_obj_add_style(label, &style, 0);
   lv_obj_align_to(label, scale, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
 
   /*Make LVGL periodically execute its tasks*/
