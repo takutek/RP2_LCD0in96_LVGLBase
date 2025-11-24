@@ -1,5 +1,6 @@
 #include <cassert>
 #include "LvglPort.h"
+#include "Board/Lcd0in96/Lcd0in96.h"
 #include "Drivers/Timer/Timer.h"
 
 std::unique_ptr<Lcd0in96> LvglPort::lcd;

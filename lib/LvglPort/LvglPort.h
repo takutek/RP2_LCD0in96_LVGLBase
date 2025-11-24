@@ -1,7 +1,8 @@
 #pragma once
 #include <memory>
 #include "lvgl.h"
-#include "Board/Lcd0in96/Lcd0in96.h"
+
+class Lcd0in96;
 
 class LvglPort {
 public:
