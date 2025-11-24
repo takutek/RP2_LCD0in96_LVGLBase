@@ -44,11 +44,11 @@ void Lcd0in96::SendColor(const uint8_t *cmd, size_t cmd_size, uint8_t *param, si
 }
 
 void Lcd0in96::InitLcdGpio() {
-    _rst = std::make_unique<Gpio>(LCD_RST_PIN, Gpio::OUTPUT);
+    _rst = std::make_unique<Gpio>(LCD_RST_PIN);
     _rst->Write(true);
-    _cs =  std::make_unique<Gpio>(LCD_CS_PIN, Gpio::OUTPUT);
+    _cs =  std::make_unique<Gpio>(LCD_CS_PIN);
     _cs->Write(true);
-    _dc = std::make_unique<Gpio>(LCD_DC_PIN, Gpio::OUTPUT);
+    _dc = std::make_unique<Gpio>(LCD_DC_PIN);
     _dc->Write(true);
 }
 

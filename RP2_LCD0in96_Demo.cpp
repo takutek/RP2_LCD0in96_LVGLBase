@@ -1,13 +1,18 @@
 #include <cstdio>
 #include <iostream>
 #include <memory>
+#ifdef PC_SIMULATOR
+#include <SDL.h>
+#endif
 #include "LvglPort/LvglPort.h"
 #include "Board/BoardInit/BoardInit.h"
 #include "Drivers/Timer/Timer.h"
 #include "Drivers/Adc/Adc.h"
 
-int main()
+int main(int argc, char *argv[])
 {
+  (void)argc;
+  (void)argv;
   BoardInit::ModuleInit();
   std::cout << "RP2 LCD0in96 LVGL Temperature Sensor Demo\n";
   std::unique_ptr<LvglPort> lvglPort = std::make_unique<LvglPort>();
@@ -38,7 +43,7 @@ int main()
   lv_bar_set_range(bar, 15, 30);
 
   // バーの色設定
-  lv_obj_set_style_bg_color(bar, lv_color_hex(0xC0C0C0), LV_PART_MAIN);      // 背景を薄い灰色
+  lv_obj_set_style_bg_color(bar, lv_color_hex(0xC0C0C0), LV_PART_MAIN); // 背景を薄い灰色
   lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_MAIN);
   lv_obj_set_style_bg_color(bar, lv_color_hex(0x1E90FF), LV_PART_INDICATOR); // インジケータを青
   lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_INDICATOR);

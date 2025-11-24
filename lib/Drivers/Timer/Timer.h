@@ -2,11 +2,12 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-unsigned long GetMillsSinceBoot();
-void SleepMs(uint32_t ms);
+    uint64_t GetMillsSinceBoot();
+    void SleepMs(uint32_t ms);
 
 #ifdef __cplusplus
 }

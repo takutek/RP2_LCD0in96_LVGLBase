@@ -6,6 +6,7 @@ package "pico_hal" {
   class Pwm
   class Dma
   class Adc
+  class Uart
 }
 
 package "board" {

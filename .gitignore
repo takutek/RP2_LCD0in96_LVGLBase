@@ -3,3 +3,4 @@ build/*
 *.code-workspace
 *.cmake
 !build/**/*.uf2
+!build/**/*.exe

@@ -4,14 +4,22 @@
 #include "Drivers/Timer/Timer.h"
 
 std::unique_ptr<Lcd0in96> LvglPort::lcd;
-lv_display_t* LvglPort::display = nullptr;
+lv_display_t *LvglPort::display = nullptr;
 
-extern "C" void my_lcd_send_cmd_c(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size, const uint8_t *param, size_t param_size) {
+extern "C" void my_lcd_send_cmd_c(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size, const uint8_t *param, size_t param_size)
+{
     LvglPort::lcd->SendCommand(cmd, cmd_size, param, param_size);
 }
 
-extern "C" void my_lcd_send_color_c(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size, uint8_t *param, size_t param_size) {
+extern "C" void my_lcd_send_color_c(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size, uint8_t *param, size_t param_size)
+{
     LvglPort::lcd->SendColor(cmd, cmd_size, param, param_size);
+}
+
+// Wrapper to adapt our 64-bit millisecond provider to LVGL's 32-bit tick callback.
+extern "C" uint32_t lvgl_tick_get_wrapper()
+{
+    return static_cast<uint32_t>(GetMillsSinceBoot());
 }
 
 void LvglPort::my_lcd_send_cmd(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size, const uint8_t *param, size_t param_size)
@@ -33,7 +41,8 @@ LvglPort::LvglPort()
 {
     lcd = std::make_unique<Lcd0in96>();
     lv_init();
-    lv_tick_set_cb(GetMillsSinceBoot);
+
+    lv_tick_set_cb(lvgl_tick_get_wrapper);
     display = lv_st7735_create(LCD_HEIGHT, LCD_WIDTH, LV_LCD_FLAG_BGR, my_lcd_send_cmd_c, my_lcd_send_color_c);
     assert(display != nullptr);
     lcd->SetDmaHandler(display);

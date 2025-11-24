@@ -4,9 +4,11 @@
 
 Waveshare社が出している、0.96インチのLCD付きRaspberry Pi Pico 2 互換ボード[RP2350-LCD-0.96](https://www.waveshare.com/rp2350-lcd-0.96.htm)上で、**LVGL v9**を動かすデモです。
 
-LVGLのデモは[公式Wiki](https://www.waveshare.com/wiki/RP2350-LCD-0.96)にも存在しますが、これはLVGL v8系列向けのコードでそのままではLVGL v9では動作しないので、LVGLドライバを修正しました。
+LVGLのデモは[公式Wiki](https://www.waveshare.com/wiki/RP2350-LCD-0.96)にも存在しますが、これはLVGL v8系列向けのコードでありLVGL v9では動作しないので、LVGLドライバを修正しました。また、Windows環境で使用できるシミュレータ環境も同梱しています。
 
-## How to use
+## How to use this project
+
+### For Raspberry Pi Pico 2
 
 本プロジェクトをVS CodeのRaspberry Pi Pico拡張機能でPico 2向けプロジェクトとしてImportします。
 
@@ -16,9 +18,22 @@ LVGLのデモは[公式Wiki](https://www.waveshare.com/wiki/RP2350-LCD-0.96)に�
 
 あるいは、単にデモを行うだけであれば```build/RP2_LCD0in96_Demo.uf2```を書き込んでください。
 
-## Demonstration
+デモコードである```RP2_LCD0in96_Demo.cpp```では、RP2350チップ内蔵の温度センサの値を取得し、それをLVGLでメモリ付きバーとラベルで表示します。ただし、チップ内蔵温度センサは外気温とは**大きく異なる値を示す**ので、気温計としては使い物にはなりません（いちおう```temp_comp_factor```で補正をかけてはいます）。
 
-デモコードである```RP2_LCD0in96_Demo.cpp```では、RP2350チップ内蔵の温度センサの値を取得し、それをLVGLでメモリ付きバーとラベルで表示します。ただし、チップ内蔵温度センサは外気温とは**大きく異なる値を示す**ので、気温計としては使い物にはなりません（いちおう```temp_comp_factor```で補正をかけてはいる）。
+### How to use the Windows simulator
+
+LVGLによるUI開発を行いやすくするため、Windows + [lv_port_pc_vscode](https://github.com/lvgl/lv_port_pc_vscode)によるシミュレータ環境を付属しています。
+
+シミュレータの使用方法は以下の通りです。
+
+1. [MSYS2](https://www.msys2.org/)をインストールする
+2. MSYS2 MINGW64シェルで```bootstrap_simulator.sh```を実行する
+   - これにより、Windowsビルド環境とSDL2がインストールされる
+3. 最上位CMakeListsで```option(PC_SIMULATOR "Build for PC simulator" ON)```に設定
+4. CMakeToolsでツールキットをMinGWに設定し、ビルド
+5. MSYS2 MINGW64シェルで```build\RP2_LCD0in96_Demo.exe```を実行する
+
+![シミュレータ](doc/simulator.png)
 
 ## License
 

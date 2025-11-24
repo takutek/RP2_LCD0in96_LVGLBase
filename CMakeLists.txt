@@ -25,6 +25,51 @@ endif()
 # ====================================================================================
 set(PICO_BOARD pico2 CACHE STRING "Board type")
 
+include(FetchContent)
+
+option(PC_SIMULATOR "Build for PC simulator" OFF)
+
+LIST(APPEND COMMON_LIBS
+    BoardInit
+    Timer
+    Adc
+    LvglPort
+)
+
+if(PC_SIMULATOR)
+    project(RP2_LCD0in96_Demo C CXX ASM)
+    add_executable(RP2_LCD0in96_Demo RP2_LCD0in96_Demo.cpp )
+    target_compile_definitions(RP2_LCD0in96_Demo PRIVATE PC_SIMULATOR)
+
+    FetchContent_Declare(
+    lv_port_pc_vscode
+    GIT_REPOSITORY https://github.com/lvgl/lv_port_pc_vscode
+    GIT_TAG        master
+    )
+    FetchContent_MakeAvailable(lv_port_pc_vscode)
+    set(LV_PORT_PC_VSCODE_DIR ${lv_port_pc_vscode_SOURCE_DIR})
+
+    if(TARGET lv_port_pc_vscode)
+        target_compile_options(lv_port_pc_vscode PRIVATE -w)
+    endif()
+    if(TARGET lvgl)
+        target_compile_options(lvgl PRIVATE -w)
+    endif()
+
+    find_package(SDL2 REQUIRED)
+    
+    target_include_directories(RP2_LCD0in96_Demo PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}
+        ${SDL2_INCLUDE_DIRS}
+    )
+    target_link_libraries(RP2_LCD0in96_Demo PRIVATE 
+            ${COMMON_LIBS}
+            -Wl,--start-group
+            ${SDL2_LIBRARIES} 
+            lvgl
+            -Wl,--end-group)
+else()
+
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
@@ -46,10 +91,9 @@ pico_enable_stdio_usb(RP2_LCD0in96_Demo 0)
 
 # Add the standard library to the build
 target_link_libraries(RP2_LCD0in96_Demo PRIVATE
-        lvgl LvglPort
-        Timer Adc
-        pico_stdlib
-        BoardInit Lcd0in96)
+        ${COMMON_LIBS} Lcd0in96
+        lvgl pico_stdlib
+        )
 
 # Add the standard include files to the build
 target_include_directories(RP2_LCD0in96_Demo PRIVATE
@@ -59,7 +103,6 @@ pico_add_extra_outputs(RP2_LCD0in96_Demo)
 
 target_compile_options(RP2_LCD0in96_Demo PRIVATE -Wall -Wextra -Wshadow -Wpedantic -Werror)
 
-include(FetchContent)
 FetchContent_Declare(
   lvgl
   GIT_REPOSITORY https://github.com/lvgl/lvgl.git
@@ -67,5 +110,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(lvgl)
 target_compile_options(lvgl PRIVATE -w)
+
+endif()
 
 add_subdirectory(lib)
