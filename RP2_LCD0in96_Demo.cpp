@@ -4,13 +4,12 @@
 #ifdef PC_SIMULATOR
 #include <SDL.h>
 #endif
-#include "LvglPort/LvglPort.h"
 #include "Board/BoardInit/BoardInit.h"
-#include "Drivers/Timer/Timer.h"
 #include "Drivers/Adc/Adc.h"
+#include "Drivers/Timer/Timer.h"
+#include "LvglPort/LvglPort.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
   (void)argc;
   (void)argv;
   BoardInit::ModuleInit();
@@ -22,7 +21,7 @@ int main(int argc, char *argv[])
 
   // ウィジェット設定
   // スケール
-  lv_obj_t *scale = lv_scale_create(lv_screen_active());
+  lv_obj_t* scale = lv_scale_create(lv_screen_active());
   lv_obj_set_size(scale, lv_pct(80), lv_pct(40));
   lv_scale_set_mode(scale, LV_SCALE_MODE_HORIZONTAL_BOTTOM);
   lv_obj_center(scale);
@@ -37,25 +36,26 @@ int main(int argc, char *argv[])
   lv_scale_set_range(scale, 15, 30);
 
   // バー
-  lv_obj_t *bar = lv_bar_create(lv_screen_active());
+  lv_obj_t* bar = lv_bar_create(lv_screen_active());
   lv_obj_set_size(bar, lv_pct(80), lv_pct(10));
   lv_obj_align_to(bar, scale, LV_ALIGN_TOP_MID, 0, -10);
   lv_bar_set_range(bar, 15, 30);
 
   // バーの色設定
-  lv_obj_set_style_bg_color(bar, lv_color_hex(0xC0C0C0), LV_PART_MAIN); // 背景を薄い灰色
+  lv_obj_set_style_bg_color(bar, lv_color_hex(0xC0C0C0),
+                            LV_PART_MAIN);  // 背景を薄い灰色
   lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_bg_color(bar, lv_color_hex(0x1E90FF), LV_PART_INDICATOR); // インジケータを青
+  lv_obj_set_style_bg_color(bar, lv_color_hex(0x1E90FF),
+                            LV_PART_INDICATOR);  // インジケータを青
   lv_obj_set_style_bg_opa(bar, LV_OPA_COVER, LV_PART_INDICATOR);
 
   // ラベル
-  lv_obj_t *label = lv_label_create(lv_screen_active());
+  lv_obj_t* label = lv_label_create(lv_screen_active());
   lv_label_set_text(label, "00.00°C");
   lv_obj_align_to(label, scale, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
 
   /*Make LVGL periodically execute its tasks*/
-  while (true)
-  {
+  while (true) {
     const float temp = Adc::GetTempFromAdcVoltage(adc->ReadVoltage());
     char buf[32];
     snprintf(buf, sizeof(buf), "%.2f°C", temp);

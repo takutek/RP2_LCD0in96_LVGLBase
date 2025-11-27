@@ -1,12 +1,7 @@
-#include "Drivers/Timer/Timer.h"
 #include <windows.h>
 
-unsigned long GetMillsSinceBoot()
-{
-    return GetTickCount64();
-}
+#include "Drivers/Timer/Timer.h"
 
-void SleepMs(uint32_t ms)
-{
-    Sleep(ms);
-}
+unsigned long GetMillsSinceBoot() { return GetTickCount64(); }
+
+void SleepMs(uint32_t ms) { Sleep(ms); }
