@@ -4,6 +4,12 @@
 
 #include "Drivers/Uart/Uart.h"
 
+class Gpio {
+ public:
+  Gpio() {};
+  ~Gpio() = default;
+};
+
 Uart::Uart(Port port, int tx_pin, int rx_pin, Baudrate baudrate) {
   (void)port;
   (void)tx_pin;

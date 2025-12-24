@@ -28,3 +28,5 @@ void Gpio::SetMode(Mode mode) {
 }
 
 void Gpio::Write(bool value) { gpio_put(_pin, value); }
+
+bool Gpio::Read() const { return gpio_get(_pin); }

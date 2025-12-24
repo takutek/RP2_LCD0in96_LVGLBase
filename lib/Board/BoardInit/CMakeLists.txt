@@ -1,6 +1,8 @@
 set(libname BoardInit)
 add_library(${libname} STATIC)
 
+target_link_libraries(${libname} PRIVATE BoardConfig)
+
 if(PC_SIMULATOR)
     target_sources(${libname} PRIVATE DummyBoardInit.cpp)
 else()

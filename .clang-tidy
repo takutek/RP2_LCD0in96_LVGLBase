@@ -7,7 +7,7 @@ Checks: >
   ,portability-*
   ,readability-*
 WarningsAsErrors: ''
-HeaderFilterRegex: '(^|.*[\\/])lib[\\/].*|^(\./).*'
+HeaderFilterRegex: '^(?!.*[\\/](build|\.pico-sdk|_deps)[\\/]).*$'
 FormatStyle: file
 CheckOptions:
   - key:             modernize-use-nullptr.NullMacros

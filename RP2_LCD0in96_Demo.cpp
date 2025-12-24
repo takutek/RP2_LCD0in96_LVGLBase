@@ -1,23 +1,24 @@
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <memory>
 #ifdef PC_SIMULATOR
 #include <SDL.h>
 #endif
+
 #include "Board/BoardInit/BoardInit.h"
 #include "Drivers/Adc/Adc.h"
+#include "Drivers/Thread/Fifo.h"
+#include "Drivers/Thread/Thread.h"
 #include "Drivers/Timer/Timer.h"
+#include "Drivers/Uart/Uart.h"
 #include "LvglPort/LvglPort.h"
 
-int main(int argc, char* argv[]) {
-  (void)argc;
-  (void)argv;
-  BoardInit::ModuleInit();
+static Fifo g_fifo;
+
+int ForegroundTask() {
   std::cout << "RP2 LCD0in96 LVGL Temperature Sensor Demo\n";
   std::unique_ptr<LvglPort> lvglPort = std::make_unique<LvglPort>();
-
-  // 温度センサ設定
-  std::unique_ptr<Adc> adc = std::make_unique<Adc>(Adc::TEMP_SENSOR_CHANNEL);
 
   // ウィジェット設定
   // スケール
@@ -56,7 +57,9 @@ int main(int argc, char* argv[]) {
 
   /*Make LVGL periodically execute its tasks*/
   while (true) {
-    const float temp = Adc::GetTempFromAdcVoltage(adc->ReadVoltage());
+    uint32_t bits = g_fifo.pop(false);
+    float temp = 0.0f;
+    std::memcpy(&temp, &bits, sizeof(bits));
     char buf[32];
     snprintf(buf, sizeof(buf), "%.2f°C", temp);
     // スケールの針を温度値に合わせる
@@ -67,5 +70,29 @@ int main(int argc, char* argv[]) {
     lv_timer_handler();
     SleepMs(1000);
   }
+  return 0;
+}
+
+int BackgroundTask() {
+  std::unique_ptr<Adc> adc = std::make_unique<Adc>(Adc::TEMP_SENSOR_CHANNEL);
+  while (true) {
+    if (g_fifo.can_be_pushed()) {
+      const float temp = Adc::GetTempFromAdcVoltage(adc->ReadVoltage());
+      uint32_t bits = 0;
+      std::memcpy(&bits, &temp, sizeof(bits));
+      g_fifo.push(bits, true);
+    }
+    SleepMs(1000);
+  }
+  return 0;
+}
+
+int main(int argc, char* argv[]) {
+  (void)argc;
+  (void)argv;
+  BoardInit::ModuleInit();
+  Thread background;
+  background.Start([]() { BackgroundTask(); });
+  ForegroundTask();
   return 0;
 }

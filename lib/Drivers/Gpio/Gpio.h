@@ -1,4 +1,7 @@
 #pragma once
+#ifdef PC_SIMULATOR
+#include <SDL.h>
+#endif
 
 class Gpio {
  public:
@@ -8,6 +11,11 @@ class Gpio {
   ~Gpio();
   void SetMode(Mode mode);
   void Write(bool value);
+  bool Read() const;
+
+#ifdef PC_SIMULATOR
+  static void SetSimulatedKey(int pin, SDL_Scancode key);
+#endif
 
  private:
   int _pin;
