@@ -2,7 +2,7 @@
 #include <mutex>
 #include <queue>
 
-#include "Drivers/Thread/Fifo.h"
+#include "Fifo/Fifo.h"
 
 static std::queue<uint32_t> g_fifo_q;
 static std::mutex g_fifo_m;

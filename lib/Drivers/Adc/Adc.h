@@ -4,6 +4,12 @@ class Adc {
  public:
   Adc(int channel);
   ~Adc() = default;
+
+  Adc(const Adc&) = delete;
+  Adc& operator=(const Adc&) = delete;
+  Adc(Adc&&) = delete;
+  Adc& operator=(Adc&&) = delete;
+
   float ReadVoltage();
   static float GetTempFromAdcVoltage(float adc_voltage) {
     return 27.0f - (adc_voltage - 0.706f) / 0.001721f + TempCompFactor;

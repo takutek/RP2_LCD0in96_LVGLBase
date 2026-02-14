@@ -1,10 +1,13 @@
+#include "Switch/Switch.h"
+
 #include "Drivers/Gpio/Gpio.h"
-#include "Drivers/Switch/Switch.h"
 
 Switch::Switch(int pin, bool active_low) {
   _active_low = active_low;
   _state = State::OFF;
-  _gpio = std::make_unique<Gpio>(pin, Gpio::Direction::INPUT);
+  _event = State::OFF;
+  _count = 0;
+  _gpio = std::make_unique<Gpio>(pin, Gpio::SIO, Gpio::Direction::INPUT);
 }
 
 Switch::~Switch() = default;
@@ -17,12 +20,8 @@ Switch::State Switch::ReadEvent() {
   return temp;
 }
 
-Switch::State Switch::UpdateState() {
-  if (active_low) {
-    pin_state = !_gpio->Read();
-  } else {
-    pin_state = _gpio->Read();
-  }
+void Switch::UpdateState() {
+  const bool pin_state = _active_low ? !_gpio->Read() : _gpio->Read();
 
   if (pin_state) {
     _count++;
@@ -38,5 +37,4 @@ Switch::State Switch::UpdateState() {
       _count = 0;
     }
   }
-  return _state;
 }

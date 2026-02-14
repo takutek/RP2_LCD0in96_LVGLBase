@@ -29,16 +29,19 @@ option(PC_SIMULATOR "Build for PC simulator" OFF)
 
 LIST(APPEND COMMON_LIBS
     BoardInit
-    Timer
-    Adc
-    LvglPort
-    Thread
+    Fifo
+    Tasks
+)
+
+set(COMMON_COMPILE_OPTIONS
+    -Wall -Wextra -Wshadow -Wpedantic -Werror
 )
 
 if(PC_SIMULATOR)
     project(RP2_LCD0in96_Demo C CXX ASM)
     add_executable(RP2_LCD0in96_Demo RP2_LCD0in96_Demo.cpp )
     target_compile_definitions(RP2_LCD0in96_Demo PRIVATE PC_SIMULATOR=1)
+    target_compile_options(RP2_LCD0in96_Demo PRIVATE ${COMMON_COMPILE_OPTIONS})
 
     find_package(SDL2 REQUIRED)
     
@@ -53,9 +56,7 @@ if(PC_SIMULATOR)
     target_link_libraries(RP2_LCD0in96_Demo PRIVATE 
             ${COMMON_LIBS}
             -Wl,--start-group
-            ${SDL2_LIBRARIES} 
-            lvgl
-            Threads::Threads
+            ${SDL2_LIBRARIES}
             -Wl,--end-group)
 else()
 
@@ -80,8 +81,7 @@ pico_enable_stdio_usb(RP2_LCD0in96_Demo 0)
 
 # Add the standard library to the build
 target_link_libraries(RP2_LCD0in96_Demo PRIVATE
-        ${COMMON_LIBS} Lcd0in96
-        lvgl pico_stdlib
+        ${COMMON_LIBS} pico_stdlib
         )
 
 # Add the standard include files to the build
@@ -90,7 +90,7 @@ target_include_directories(RP2_LCD0in96_Demo PRIVATE
 )
 pico_add_extra_outputs(RP2_LCD0in96_Demo)
 
-target_compile_options(RP2_LCD0in96_Demo PRIVATE -Wall -Wextra -Wshadow -Wpedantic -Werror)
+target_compile_options(RP2_LCD0in96_Demo PRIVATE ${COMMON_COMPILE_OPTIONS})
 
 endif()
 

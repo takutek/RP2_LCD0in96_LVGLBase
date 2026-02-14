@@ -8,6 +8,12 @@ class Switch {
   enum class State { OFF = 0, ShortPress = 1, LongPress = 2 };
   Switch(int pin, bool active_low = true);
   ~Switch();
+
+  Switch(const Switch&) = delete;
+  Switch& operator=(const Switch&) = delete;
+  Switch(Switch&&) = delete;
+  Switch& operator=(Switch&&) = delete;
+
   State ReadState();
   State ReadEvent();
   void UpdateState();
