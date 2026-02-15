@@ -30,11 +30,16 @@ option(PC_SIMULATOR "Build for PC simulator" OFF)
 LIST(APPEND COMMON_LIBS
     BoardInit
     Fifo
-    Tasks
+    ForegroundTask
+    BackgroundTask
 )
 
 set(COMMON_COMPILE_OPTIONS
     -Wall -Wextra -Wshadow -Wpedantic -Werror
+    -Wconversion -Wsign-conversion -Wdouble-promotion
+    -Wcast-qual -Wcast-align -Wwrite-strings -Wlogical-op -Wundef
+    -Wstrict-overflow=5 -Wformat=2 -Wno-unused-parameter -Wswitch-enum -Wpointer-arith -Wfloat-equal
+    -Wmissing-format-attribute -Wredundant-decls
 )
 
 if(PC_SIMULATOR)

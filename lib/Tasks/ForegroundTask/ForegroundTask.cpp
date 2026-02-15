@@ -1,4 +1,4 @@
-#include "Tasks/Foreground/ForegroundTask.h"
+#include "Tasks/ForegroundTask/ForegroundTask.h"
 
 #include <cstring>
 

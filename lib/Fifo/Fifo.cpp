@@ -2,6 +2,8 @@
 
 #include "pico/multicore.h"
 
+Fifo::Fifo() { multicore_fifo_drain(); }
+
 bool Fifo::can_be_pushed() const { return multicore_fifo_wready(); }
 
 void Fifo::push(uint32_t value, bool blocking) {

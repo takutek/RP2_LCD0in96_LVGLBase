@@ -4,8 +4,8 @@
 
 #include "Board/BoardInit/BoardInit.h"
 #include "Fifo/Fifo.h"
-#include "Tasks/Background/BackgroundTask.h"
-#include "Tasks/Foreground/ForegroundTask.h"
+#include "Tasks/BackgroundTask/BackgroundTask.h"
+#include "Tasks/ForegroundTask/ForegroundTask.h"
 static Fifo g_fifo;
 
 int main(int argc, char* argv[]) {

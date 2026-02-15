@@ -14,7 +14,9 @@ class BackgroundTask::Impl {
   explicit Impl(Fifo& fifo)
       : _fifo(fifo),
         _adc(std::make_unique<Adc>(Adc::TEMP_SENSOR_CHANNEL)),
-        _sw(std::make_unique<Switch>(PinConfig::SWITCH_PIN, true)) {}
+        _sw(std::make_unique<Switch>(PinConfig::SWITCH_PIN, true)),
+        _timer(std::make_unique<Timer>()),
+        _stopFlag(false) {}
 
   void UpdateSwitch() { _sw->UpdateState(); }
 
@@ -49,10 +51,10 @@ class BackgroundTask::Impl {
 
  private:
   Fifo& _fifo;
-  std::atomic<bool> _stopFlag{false};
   std::unique_ptr<Adc> _adc;
   std::unique_ptr<Switch> _sw;
-  Timer _timer;
+  std::unique_ptr<Timer> _timer;
+  std::atomic<bool> _stopFlag{false};
 };
 
 BackgroundTask::BackgroundTask(Fifo& fifo) : _fifo(fifo) {

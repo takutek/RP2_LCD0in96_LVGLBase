@@ -8,6 +8,8 @@ static std::queue<uint32_t> g_fifo_q;
 static std::mutex g_fifo_m;
 static std::condition_variable g_fifo_cv;
 
+Fifo::Fifo() = default;
+
 bool Fifo::can_be_pushed() const { return true; }
 
 void Fifo::push(uint32_t value, bool blocking) {

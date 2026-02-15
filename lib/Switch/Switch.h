@@ -20,10 +20,10 @@ class Switch {
 
  private:
   std::unique_ptr<Gpio> _gpio;
-  bool _active_low;
+  int _count;
   State _state;
   State _event;
-  int _count;
+  bool _active_low;
   constexpr static int CONFIRM_COUNT = 5;
   constexpr static int LONG_PRESS_COUNT = 100;
 };

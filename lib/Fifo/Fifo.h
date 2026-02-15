@@ -4,7 +4,7 @@
 
 class Fifo {
  public:
-  Fifo() = default;
+  Fifo();
   ~Fifo() = default;
   Fifo(const Fifo&) = delete;
   Fifo& operator=(const Fifo&) = delete;
