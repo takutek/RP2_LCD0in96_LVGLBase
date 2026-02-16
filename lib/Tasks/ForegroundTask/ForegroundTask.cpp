@@ -6,10 +6,12 @@
 #include "LvglPort/LvglPort.h"
 #include "Screen/Scale.h"
 
-ForegroundTask::ForegroundTask(Fifo& fifo) : _fifo(fifo) {}
+ForegroundTask::ForegroundTask(Fifo& fifo)
+    : _fifo(fifo), _lvglPort(std::make_unique<LvglPort>()) {}
+
+ForegroundTask::~ForegroundTask() = default;
 
 int ForegroundTask::Run() {
-  std::unique_ptr<LvglPort> lvglPort = std::make_unique<LvglPort>();
   std::unique_ptr<Scale> scale = std::make_unique<Scale>();
 
   scale->Create();

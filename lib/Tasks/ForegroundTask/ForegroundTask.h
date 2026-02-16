@@ -1,11 +1,15 @@
 #pragma once
 
+#include <memory>
+
 #include "Fifo/Fifo.h"
+
+class LvglPort;
 
 class ForegroundTask {
  public:
   explicit ForegroundTask(Fifo& fifo);
-  ~ForegroundTask() = default;
+  ~ForegroundTask();
 
   ForegroundTask(const ForegroundTask&) = delete;
   ForegroundTask& operator=(const ForegroundTask&) = delete;
@@ -16,4 +20,5 @@ class ForegroundTask {
 
  private:
   Fifo& _fifo;
+  std::unique_ptr<LvglPort> _lvglPort;
 };

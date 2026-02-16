@@ -2,13 +2,16 @@
 
 #include "hardware/gpio.h"
 
-Gpio::Gpio(int pin, Mode mode, Direction direction) {
+Gpio::Gpio(int pin, Direction direction, Mode mode, bool pullup) {
   _pin = pin;
   gpio_init(_pin);
   if (direction == OUTPUT) {
     gpio_set_dir(_pin, GPIO_OUT);
   } else {
     gpio_set_dir(_pin, GPIO_IN);
+    if (pullup) {
+      gpio_pull_up(_pin);
+    }
   }
   SetMode(mode);
 }

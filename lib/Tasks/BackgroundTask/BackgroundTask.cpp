@@ -20,28 +20,27 @@ class BackgroundTask::Impl {
 
   void UpdateSwitch() { _sw->UpdateState(); }
 
-  void Run() { /*
-     _timer.RegisterCallback(
-         [this]() -> bool {
-           UpdateSwitch();
-           return true;
-         },
-         BoardConfig::SW_READ_INTERVAL_MS);*/
+  void Run() {
+    _timer->RegisterCallback(
+        [this]() -> bool {
+          UpdateSwitch();
+          return true;
+        },
+        BoardConfig::SW_READ_INTERVAL_MS);
 
     while (!_stopFlag.load()) {
-      /*
       Switch::State event = _sw->ReadEvent();
+      uint32_t event_bits = 0;
       if (event != Switch::State::OFF) {
-        // イベントをFifoに送信（メッセージタイプ0x01 + イベント値）
-        uint32_t message = (0x01 << 24) | static_cast<uint32_t>(event);
-        _fifo.push(message, false);  // non-blocking
-      }*/
-      // センサー読み取り（従来通りfloat値のビット表現を送信）
+        event_bits = (static_cast<uint32_t>(event) << 30);
+      }
+      (void)event_bits;
       if (_fifo.can_be_pushed()) {
         const float temp = Adc::GetTempFromAdcVoltage(_adc->ReadVoltage());
-        uint32_t bits = 0;
-        std::memcpy(&bits, &temp, sizeof(bits));
-        _fifo.push(bits, false);
+        int16_t temp_int = static_cast<int16_t>(temp * 100);
+        uint32_t temp_bits = static_cast<uint16_t>(temp_int) & 0xFFFF;
+        uint32_t message = temp_bits;
+        _fifo.push(message, false);
       }
       SleepMs(1000);
     }

@@ -2,13 +2,13 @@
 
 #include "Drivers/Gpio/Gpio.h"
 
-Switch::Switch(int pin, bool active_low) {
-  _active_low = active_low;
-  _state = State::OFF;
-  _event = State::OFF;
-  _count = 0;
-  _gpio = std::make_unique<Gpio>(pin, Gpio::SIO, Gpio::Direction::INPUT);
-}
+Switch::Switch(int pin, bool active_low)
+    : _gpio(
+          std::make_unique<Gpio>(pin, Gpio::Direction::INPUT, Gpio::SIO, true)),
+      _count(0),
+      _state(State::OFF),
+      _event(State::OFF),
+      _active_low(active_low) {}
 
 Switch::~Switch() = default;
 

@@ -13,9 +13,8 @@ Uart::Uart(Port port, int tx_pin, int rx_pin, Baudrate baudrate) : _port(port) {
   uart_inst_t* _uart = port_to_uart(_port);
 
   _gpio_tx =
-      std::make_unique<Gpio>(tx_pin, Gpio::Mode::UART, Gpio::Direction::OUTPUT);
-  _gpio_rx =
-      std::make_unique<Gpio>(rx_pin, Gpio::Mode::UART, Gpio::Direction::INPUT);
+      std::make_unique<Gpio>(tx_pin, Gpio::Direction::OUTPUT, Gpio::UART);
+  _gpio_rx = std::make_unique<Gpio>(rx_pin, Gpio::Direction::INPUT, Gpio::UART);
 
   uart_init(_uart, static_cast<uint32_t>(baudrate));
   uart_set_format(_uart, 8, 1, UART_PARITY_NONE);

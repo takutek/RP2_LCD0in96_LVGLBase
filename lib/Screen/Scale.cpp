@@ -53,12 +53,15 @@ void Scale::Update(void* data) {
     return;
   }
 
-  float temp = 0.0f;
-  std::memcpy(&temp, data, sizeof(float));
+  uint32_t message = *static_cast<uint32_t*>(data);
+
+  int16_t temp_int = static_cast<int16_t>(message & 0xFFFF);
+  float temp = temp_int / 100.0f;
 
   char buf[32];
   snprintf(buf, sizeof(buf), "%.2f°C", temp);
   lv_bar_set_value(_bar, static_cast<int>(temp), LV_ANIM_OFF);
   lv_label_set_text(_label, buf);
+
   lv_timer_handler();
 }

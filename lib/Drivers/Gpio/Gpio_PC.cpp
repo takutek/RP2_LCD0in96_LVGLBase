@@ -7,9 +7,10 @@
 
 static std::unordered_map<int, SDL_Scancode> g_pin_key_map;
 
-Gpio::Gpio(int pin, Mode mode, Direction direction) {
-  (void)mode;
+Gpio::Gpio(int pin, Direction direction, Mode mode, bool pullup) {
   (void)direction;
+  (void)mode;
+  (void)pullup;
   _pin = pin;
   auto it = KeyMapping::PIN_TO_KEY.find(pin);
   g_pin_key_map[pin] =
