@@ -3,7 +3,7 @@
 #endif
 
 #include "Board/BoardInit/BoardInit.h"
-#include "Fifo/Fifo.h"
+#include "Drivers/Fifo/Fifo.h"
 #include "Tasks/BackgroundTask/BackgroundTask.h"
 #include "Tasks/ForegroundTask/ForegroundTask.h"
 
